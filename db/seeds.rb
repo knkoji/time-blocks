@@ -5,3 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+jane = User.create(fname: "Jane", lname: "Beget")
+
+TimeBlock.create(name: "work", desc: "get up 6:00 AM, shower and leave before 7:00 AM",
+  display: "digital", set_time: "2016-01-18 23:59:59.999999", category: 'alarm', user_id: jane.id)
+  
+TimeBlock.create(name: "reading time", desc: "reading time before bed", display: "digital",
+  set_time: "2016-01-18 23:59:59.999999", category: 'timer', user_id: jane.id)
