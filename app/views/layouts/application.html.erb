@@ -10,10 +10,37 @@
 
   <body>
     <button id="hello" type="button">Say Hello!</button>
+    <ul id="clocks"></ul>
+    <span id="clock-create">
+      <h2>Create Clock!</h2>
+      <button id="clock-creator" type="button">create clock</button>
+    </span>
+
     <script type="text/javascript">
+
+      var clocks = [];
+
       document.getElementById('hello').onclick = function(e) {
-        alert('Hello World!');
+        alert('Hello World! We\'re Making Clocks!');
       }
+
+      let clockCreate = document.getElementById('clock-creator');
+      clockCreate.addEventListener('click', function() {
+        newClock = createClock(this);
+        this.prepend(newClock);
+      });
+
+      function createClock(clockUl) {
+        clockLi = document.createElement('li');
+        clockP = document.createElement('p');
+
+        clockLi.className = 'clock';
+        clockP.textContent = 'Clock';
+        clockLi.appendChild(clockP);
+        clocks.shift(clockLi);
+        return clockLi
+      }
+
     </script>
     <%= yield %>
   </body>
