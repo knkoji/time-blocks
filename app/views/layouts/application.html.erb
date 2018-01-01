@@ -9,36 +9,56 @@
   </head>
 
   <body>
-    <button id="hello" type="button">Say Hello!</button>
+    <h1>TIMEBLOCKS</h1>
+    <h2>Create Clock!</h2>
+
     <ul id="clocks"></ul>
+
     <span id="clock-create">
-      <h2>Create Clock!</h2>
       <button id="clock-creator" type="button">create clock</button>
     </span>
 
+    <!-- Javascript -->
     <script type="text/javascript">
+      // document.getElementById('hello').onclick = function(e) {
+      //   alert('Hello World! We\'re Making Clocks!');
+      // };
 
-      var clocks = [];
+      let clockCreator = document.getElementById('clock-creator');
 
-      document.getElementById('hello').onclick = function(e) {
-        alert('Hello World! We\'re Making Clocks!');
-      }
-
-      let clockCreate = document.getElementById('clock-creator');
-      clockCreate.addEventListener('click', function() {
-        newClock = createClock(this);
-        this.prepend(newClock);
+      clockCreator.addEventListener('click', function() {
+        let clocks = document.getElementById('clocks');
+        let newClock = createClock();
+        clocks.prepend(newClock);
       });
 
-      function createClock(clockUl) {
-        clockLi = document.createElement('li');
-        clockP = document.createElement('p');
+      function createClock() {
+        var clockLi = document.createElement('li');
+        var clockP = document.createElement('p');
+        var rightNow = new Date();
 
         clockLi.className = 'clock';
-        clockP.textContent = 'Clock';
+        clockP.textContent = renderTimeStr(rightNow);
         clockLi.appendChild(clockP);
-        clocks.shift(clockLi);
-        return clockLi
+
+        setInterval(function() {
+          clockP.textContent = renderTimeStr(new Date());
+        }, 1000);
+
+        return clockLi;
+      }
+
+      function renderTimeStr(dateTime, clockType = false) {
+        let timeHr = dateTime.getHours();
+        let timeMin = dateTime.getMinutes();
+        let timeSec = dateTime.getSeconds();
+        let clockStr = "[<< " + timeHr + " : " + timeMin + " : " + timeSec + " >>]";
+        let clockTypeStr = "clocktype: " + clockType;
+        return clockStr + clockTypeStr;
+      }
+
+      function updateClock(clock) {
+        console.log(clock);
       }
 
     </script>
