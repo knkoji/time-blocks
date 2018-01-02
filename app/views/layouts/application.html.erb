@@ -12,11 +12,11 @@
     <h1>TIMEBLOCKS</h1>
     <h2>Create Clock!</h2>
 
-    <ul id="clocks"></ul>
-
     <span id="clock-create">
       <button id="clock-creator" type="button">create clock</button>
     </span>
+
+    <ul id="clocks"></ul>
 
     <!-- Javascript -->
     <script type="text/javascript">
@@ -29,17 +29,26 @@
       clockCreator.addEventListener('click', function() {
         let clocks = document.getElementById('clocks');
         let newClock = createClock();
+
         clocks.prepend(newClock);
       });
 
       function createClock() {
-        var clockLi = document.createElement('li');
-        var clockP = document.createElement('p');
-        var rightNow = new Date();
+        let clockLi = document.createElement('li');
+        let clockP = document.createElement('p');
+        let rightNow = new Date();
+
+        //create modification button to appear here
+        let clockModButton = document.createElement('button');
+        clockModButton.textContent = "modify clock"
+        clockModButton.addEventListener('click', function() {
+          alert('mod');
+        });
 
         clockLi.className = 'clock';
         clockP.textContent = renderTimeStr(rightNow);
         clockLi.appendChild(clockP);
+        clockLi.appendChild(clockModButton);
 
         setInterval(function() {
           clockP.textContent = renderTimeStr(new Date());
@@ -48,13 +57,12 @@
         return clockLi;
       }
 
-      function renderTimeStr(dateTime, clockType = false) {
+      function renderTimeStr(dateTime) {
         let timeHr = dateTime.getHours();
         let timeMin = dateTime.getMinutes();
         let timeSec = dateTime.getSeconds();
         let clockStr = "[<< " + timeHr + " : " + timeMin + " : " + timeSec + " >>]";
-        let clockTypeStr = "clocktype: " + clockType;
-        return clockStr + clockTypeStr;
+        return clockStr;
       }
 
       function updateClock(clock) {
