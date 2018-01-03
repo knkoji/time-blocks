@@ -34,22 +34,39 @@
       });
 
       function createClock() {
-        let clockLi = document.createElement('li');
-        let clockP = document.createElement('p');
         let rightNow = new Date();
 
-        //create modification button to appear here
         let clockModButton = document.createElement('button');
-        clockModButton.textContent = "modify clock"
+        clockModButton.textContent = "modify clock";
         clockModButton.addEventListener('click', function() {
-          alert('mod');
+          modClockSpan.style.display = modClockSpan.style.display === 'none' ? '' : 'none';
         });
+        //creates modification DOM group
+        //<span class='modify'> ->
+        let modClockSpan = document.createElement('span');
+        let modClockP = document.createElement('p');
 
+        //text content is only to text, will need some type of form
+        //built by external function: modClock which can be used to
+        //with clock time saved in DOM
+        modClockSpan.style.display = 'none'
+        modClockP.textContent = modifyClock();
+        modClockSpan.classname = 'mod-clock';
+        modClockSpan.appendChild(modClockP);
+
+        //creates clock DOM group
+        let clockLi = document.createElement('li');
+        let clockP = document.createElement('p');
         clockLi.className = 'clock';
         clockP.textContent = renderTimeStr(rightNow);
+
+        //consolidates DOMelements
         clockLi.appendChild(clockP);
         clockLi.appendChild(clockModButton);
+        clockLi.appendChild(modClockSpan);
 
+        //sets up autoupdating clock
+        //needs to be set up in property of clock object
         setInterval(function() {
           clockP.textContent = renderTimeStr(new Date());
         }, 1000);
@@ -65,8 +82,8 @@
         return clockStr;
       }
 
-      function updateClock(clock) {
-        console.log(clock);
+      function modifyClock() {
+        return 'modify Clock';
       }
 
     </script>
