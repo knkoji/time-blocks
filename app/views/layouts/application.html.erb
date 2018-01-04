@@ -20,21 +20,31 @@
 
     <!-- Javascript -->
     <script type="text/javascript">
-      // document.getElementById('hello').onclick = function(e) {
-      //   alert('Hello World! We\'re Making Clocks!');
-      // };
+      //collection of clock DOM nodes to peruse
+      let clocks = [];
 
-      let clockCreator = document.getElementById('clock-creator');
-
-      clockCreator.addEventListener('click', function() {
-        let clocks = document.getElementById('clocks');
+      //setting up createClock button
+      let clockCreateButton = document.getElementById('clock-creator');
+      clockCreateButton.addEventListener('click', function() {
+        let clocksUl = document.getElementById('clocks');
         let newClock = createClock();
-
-        clocks.prepend(newClock);
+        clocks.unshift(newClock);
+        clocksUl.prepend(newClock.li);
       });
 
+      //the tick, every 1000ms
+      setInterval(function() {
+        clocks.forEach(c => {
+          p = c.li.getElementsByTagName('p')[0];
+          c.time += 1000;
+          p.textContent = renderTimeStr(c.time);
+        })
+      }, 1000);
+
       function createClock() {
-        let rightNow = new Date();
+        let clock = { time: Date.now(),
+                      timeZone: 'Pacific',
+                      clockType: false };
 
         let clockModButton = document.createElement('button');
         clockModButton.textContent = "modify clock";
@@ -55,26 +65,27 @@
         modClockSpan.appendChild(modClockP);
 
         //creates clock DOM group
-        let clockLi = document.createElement('li');
+        clock.li = document.createElement('li');
         let clockP = document.createElement('p');
-        clockLi.className = 'clock';
-        clockP.textContent = renderTimeStr(rightNow);
+        clock.li.className = 'clock';
+        clockP.textContent = renderTimeStr(clock.time);
 
         //consolidates DOMelements
-        clockLi.appendChild(clockP);
-        clockLi.appendChild(clockModButton);
-        clockLi.appendChild(modClockSpan);
+        clock.li.appendChild(clockP);
+        clock.li.appendChild(clockModButton);
+        clock.li.appendChild(modClockSpan);
 
         //sets up autoupdating clock
         //needs to be set up in property of clock object
-        setInterval(function() {
-          clockP.textContent = renderTimeStr(new Date());
-        }, 1000);
+        // setInterval(function() {
+        //   clockP.textContent = renderTimeStr(new Date());
+        // }, 1000);
 
-        return clockLi;
+        return clock;
       }
 
-      function renderTimeStr(dateTime) {
+      function renderTimeStr(timeMs) {
+        let dateTime = new Date(timeMs);
         let timeHr = dateTime.getHours();
         let timeMin = dateTime.getMinutes();
         let timeSec = dateTime.getSeconds();
