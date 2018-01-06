@@ -53,7 +53,7 @@
                       clockType: false };
 
         let changeTimeZoneButton = document.createElement('button');
-        changeTimeZoneButton.textContent = ">"
+        changeTimeZoneButton.textContent = ">";
 
         changeTimeZoneButton.addEventListener('click', function() {
           changeTimeZoneSpan.style.display = changeTimeZoneSpan.style.display === 'none' ? '' : 'none';
@@ -64,6 +64,8 @@
         let timeZones = Object.keys(timeZonesUTCDiff);
 
         changeTimeZoneSelect.className = 'timezone'
+        changeTimeZoneSelect.value = clock.timeZone;
+        console.log("zone: " + changeTimeZoneSelect.value);
         timeZones.forEach(tZ => {
           let option = document.createElement('option');
           option.setAttribute('value', tZ);
@@ -74,8 +76,21 @@
 
         changeTimeZoneSelect.addEventListener("change", function() {
           console.log(this.value);
-          clock.timeZone = this.value;
           clockPTimeZone.textContent = this.value;
+
+          let dateTime = new Date(clock.time);
+          let formerTz = clock.timeZone;
+          let formerTzOffset = timeZonesUTCDiff[formerTz];
+          let newTz = clockPTimeZone.textContent;
+          let newTzOffset = timeZonesUTCDiff[newTz];
+          let timeZoneOffset = formerTzOffset - newTzOffset;
+          let timeZoneOffsetMs = timeZoneOffset * 1000 * 60 * 60;
+          let newTime = clock.time + timeZoneOffsetMs;
+          clock.time = newTime;
+          clockPTime.textContent = renderTimeStr(clock.time);
+          // console.log('former: ' + clock.timeZone);
+          // console.log('now: ' + clockPTimeZone.textContent);
+          clock.timeZone = clockPTimeZone.textContent;
 
         });
 
@@ -92,17 +107,7 @@
         clockPDate.textContent = renderDateStr(clock.time);
         clockPLocation.textContent = renderLocationStr(clock.time);
         clockPTimeZone.textContent = clock.timeZone;
-
-        clockPTimeZone.textContent = addEventListener("change", function() {
-          let dateTime = new Date(clock.time);
-          let timeZoneUTCOffsetMs = dateTime.getTimezoneOffset() * 1000 * 60;
-          let timeZoneUTCDiffMs = timeZonesUTCDiff[clock.timeZone] * 1000 * 60 * 60;
-          let newTime = clock.time + timeZoneUTCOffsetMs + timeZoneUTCDiffMs;
-          clock.time = newTime;
-          clockPTime.textContent = renderTimeStr(clock.time)
-
-        });
-
+        console.log(clock.timeZone);
         clock.li = document.createElement('li');
         clock.li.className = 'clock';
 
@@ -113,16 +118,37 @@
         clock.li.appendChild(changeTimeZoneButton);
         clock.li.appendChild(changeTimeZoneSpan);
 
+        // clockPTimeZone.textContent = addEventListener("change", () => {
+        //   let dateTime = new Date(clock.time);
+        //   let formerTz = clock.timeZone;
+        //   let formerTzOffset = timeZonesUTCDiff[formerTz];
+        //   let newTz = clockPTimeZone.textContent;
+        //   let newTzOffset = timeZonesUTCDiff[newTz];
+        //   let timeZoneOffset = formerTzOffset - newTzOffset;
+        //   let timeZoneOffsetMs = timeZoneOffset * 1000 * 60 * 60;
+        //   let newTime = clock.time + timeZoneOffsetMs;
+        //   clock.time = newTime;
+        //   clockPTime.textContent = renderTimeStr(clock.time);
+        //   // console.log('former: ' + clock.timeZone);
+        //   // console.log('now: ' + clockPTimeZone.textContent);
+        //   clock.timeZone = clockPTimeZone.textContent;
+        //
+        //
+        // });
+
+
         return clock;
       }
 
       function renderTimeStr(timeMs) {
         let dateTime = new Date(timeMs);
-        let timeHr = dateTime.getHours();
-        let timeMin = dateTime.getMinutes();
-        let timeSec = dateTime.getSeconds();
-        let period = timeHr < 12 ? "AM" : "PM";
-        let timeStr = "  " + (timeHr % 12) + "  :  " + timeMin + "  :  " + timeSec + "  " + period;
+        let hr = dateTime.getHours();
+        let timeHr = hr === 12 ? 12 : (hr > 12 ? hr % 12 : hr);
+        let timeMin = dateTime.getMinutes() < 10 ? '0' + dateTime.getMinutes() : dateTime.getMinutes();
+        let timeSec = dateTime.getSeconds() < 10 ? '0' + dateTime.getSeconds() : dateTime.getSeconds();
+        let period = hr < 12 ? "AM" : "PM";
+        console.log(hr);
+        let timeStr = "  " + timeHr + "  :  " + timeMin + "  :  " + timeSec + "  " + period;
         return timeStr;
       }
 
