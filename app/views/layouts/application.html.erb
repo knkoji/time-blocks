@@ -18,12 +18,19 @@
 
     <ul id="clocks"></ul>
 
-    <!-- Javascript -->
     <script type="text/javascript">
-      //collection of clock DOM nodes to peruse
-      let clocks = [];
 
-      //setting up createClock button
+      let clocks = [];
+      let timeZonesUTCDiff = { Pacific: 8,
+                               Mountain: 7,
+                               Central: 6,
+                               Eastern: 5 };
+      let month = ["January", "February", "March", "April", "May",
+                    "June", "July", "August", "September", "October",
+                    "November", "December"];
+      let day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+                  "Saturday", "Sunday"];
+      // console.log(timeZonesUTCDiff.keys());
       let clockCreateButton = document.getElementById('clock-creator');
       clockCreateButton.addEventListener('click', function() {
         let clocksUl = document.getElementById('clocks');
@@ -32,7 +39,6 @@
         clocksUl.prepend(newClock.li);
       });
 
-      //the tick, every 1000ms
       setInterval(function() {
         clocks.forEach(c => {
           p = c.li.getElementsByTagName('p')[0];
@@ -46,40 +52,66 @@
                       timeZone: 'Pacific',
                       clockType: false };
 
-        let clockModButton = document.createElement('button');
-        clockModButton.textContent = "modify clock";
-        clockModButton.addEventListener('click', function() {
-          modClockSpan.style.display = modClockSpan.style.display === 'none' ? '' : 'none';
+        let changeTimeZoneButton = document.createElement('button');
+        changeTimeZoneButton.textContent = ">"
+
+        changeTimeZoneButton.addEventListener('click', function() {
+          changeTimeZoneSpan.style.display = changeTimeZoneSpan.style.display === 'none' ? '' : 'none';
         });
-        //creates modification DOM group
-        //<span class='modify'> ->
-        let modClockSpan = document.createElement('span');
-        let modClockP = document.createElement('p');
 
-        //text content is only to text, will need some type of form
-        //built by external function: modClock which can be used to
-        //with clock time saved in DOM
-        modClockSpan.style.display = 'none'
-        modClockP.textContent = modifyClock();
-        modClockSpan.classname = 'mod-clock';
-        modClockSpan.appendChild(modClockP);
+        let changeTimeZoneSpan = document.createElement('span');
+        let changeTimeZoneSelect = document.createElement('select');
+        let timeZones = Object.keys(timeZonesUTCDiff);
 
-        //creates clock DOM group
+        changeTimeZoneSelect.className = 'timezone'
+        timeZones.forEach(tZ => {
+          let option = document.createElement('option');
+          option.setAttribute('value', tZ);
+          option.textContent = tZ;
+          changeTimeZoneSelect.appendChild(option);
+          console.log(tZ);
+        });
+
+        changeTimeZoneSelect.addEventListener("change", function() {
+          console.log(this.value);
+          clock.timeZone = this.value;
+          clockPTimeZone.textContent = this.value;
+
+        });
+
+        changeTimeZoneSpan.style.display = 'none'
+        changeTimeZoneSpan.classname = 'mod-timezone';
+        changeTimeZoneSpan.appendChild(changeTimeZoneSelect);
+
+        let clockPTime = document.createElement('p');
+        let clockPDate = document.createElement('p');
+        let clockPLocation = document.createElement('p');
+        let clockPTimeZone = document.createElement('p');
+
+        clockPTime.textContent = renderTimeStr(clock.time);
+        clockPDate.textContent = renderDateStr(clock.time);
+        clockPLocation.textContent = renderLocationStr(clock.time);
+        clockPTimeZone.textContent = clock.timeZone;
+
+        clockPTimeZone.textContent = addEventListener("change", function() {
+          let dateTime = new Date(clock.time);
+          let timeZoneUTCOffsetMs = dateTime.getTimezoneOffset() * 1000 * 60;
+          let timeZoneUTCDiffMs = timeZonesUTCDiff[clock.timeZone] * 1000 * 60 * 60;
+          let newTime = clock.time + timeZoneUTCOffsetMs + timeZoneUTCDiffMs;
+          clock.time = newTime;
+          clockPTime.textContent = renderTimeStr(clock.time)
+
+        });
+
         clock.li = document.createElement('li');
-        let clockP = document.createElement('p');
         clock.li.className = 'clock';
-        clockP.textContent = renderTimeStr(clock.time);
 
-        //consolidates DOMelements
-        clock.li.appendChild(clockP);
-        clock.li.appendChild(clockModButton);
-        clock.li.appendChild(modClockSpan);
-
-        //sets up autoupdating clock
-        //needs to be set up in property of clock object
-        // setInterval(function() {
-        //   clockP.textContent = renderTimeStr(new Date());
-        // }, 1000);
+        clock.li.appendChild(clockPTime);
+        clock.li.appendChild(clockPDate);
+        clock.li.appendChild(clockPLocation);
+        clock.li.appendChild(clockPTimeZone);
+        clock.li.appendChild(changeTimeZoneButton);
+        clock.li.appendChild(changeTimeZoneSpan);
 
         return clock;
       }
@@ -89,8 +121,23 @@
         let timeHr = dateTime.getHours();
         let timeMin = dateTime.getMinutes();
         let timeSec = dateTime.getSeconds();
-        let clockStr = "[<< " + timeHr + " : " + timeMin + " : " + timeSec + " >>]";
-        return clockStr;
+        let period = timeHr < 12 ? "AM" : "PM";
+        let timeStr = "  " + (timeHr % 12) + "  :  " + timeMin + "  :  " + timeSec + "  " + period;
+        return timeStr;
+      }
+
+      function renderDateStr(timeMs) {
+        let dateTime = new Date(timeMs);
+        let dateMonth = month[dateTime.getMonth()];
+        let dateDate = dateTime.getDate();
+        let dateDay = day[dateTime.getDay()];
+        let dateYear = dateTime.getFullYear();
+        let dateStr = dateDay + ", " + dateMonth + "  " + dateDate + ", " + dateYear;
+        return dateStr;
+      }
+
+      function renderLocationStr(timeMs) {
+        return "San Francisco";
       }
 
       function modifyClock() {
