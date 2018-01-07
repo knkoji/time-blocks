@@ -13,7 +13,9 @@
  *= require_tree .
  *= require_self
  */
-
+body {
+  background-color: white;
+}
 #title {
    font-size: 80px; /* px means 'pixels': the base font size is now 10 pixels high  */
    font-family: 'Monoton', sans-serif;
@@ -26,14 +28,15 @@ h2 {
 
 li {
   margin-top: 10px;
-  border: solid;
-  border-width: thin thin thin medium;
+  border: none;
+  border-width: thin thin thin thin;
   list-style: none;
   height: 300px;
   width: 600px;
   align-items: right;
-  background-color: black;
-  color: white;
+  background-color: aliceblue;
+  /*color: white;*/
+  box-shadow: 3px 3px 3px 3px grey;
   ;
 }
 li button {
@@ -50,6 +53,7 @@ p {
   margin-bottom: .3em;
   font-size: 60px;
   font-family: 'Orbitron';
+  padding: 40px;
 }
 
 .clock p:nth-child(2) {
