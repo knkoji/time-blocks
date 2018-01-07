@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Timeblocks</title>
+    <link href="https://fonts.googleapis.com/css?family=Arimo|Cormorant+Garamond|Electrolize|Gudea|Handlee|Jura|Leckerli+One|Limelight|Marcellus+SC|Monoton|Orbitron|Play|Playfair+Display|Playfair+Display+SC|Varela+Round" rel="stylesheet">
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
@@ -9,16 +10,34 @@
   </head>
 
   <body>
-    <h1>TIMEBLOCKS</h1>
-    <h2>Create Clock!</h2>
+    <h1 id="title">TIMEBLOCKS</h1>
 
-    <span id="clock-create">
-      <button id="clock-creator" type="button">create clock</button>
-    </span>
+    <div id="clock-div">
+      <span id="create-clock-span">
+        <!-- <h2>Create Clock</h2> -->
+        <span id="clock-create">
+          <button id="clock-creator" type="button">create clock</button>
+        </span>
+      </span>
+      <ul id="clocks"></ul>
+    </div>
 
-    <ul id="clocks"></ul>
+    <span id="font"></span>
 
     <script type="text/javascript">
+
+      let fontNames = ['Playfair', 'Arimo', 'Varelo Round', 'Play', 'Cormorant Garamond',
+                        'Orbitron', 'Playfair Display SC', 'Gudea', 'Monoton', 'Jura',
+                        'Electrolize', 'Marcellus SC', 'Leckerli One', 'Handlee', 'Limelight'];
+      let fontSpan = document.getElementById('font');
+      fontNames.forEach( font => {
+        let fontP = document.createElement('p');
+        let fontFamily = ''
+        fontP.setAttribute('style', ('font-family:' + font));
+        fontP.textContent = font;
+        fontSpan.appendChild(fontP);
+
+      });
 
       let clocks = [];
       let timeZonesUTCDiff = { Pacific: 8,
@@ -117,25 +136,6 @@
         clock.li.appendChild(clockPTimeZone);
         clock.li.appendChild(changeTimeZoneButton);
         clock.li.appendChild(changeTimeZoneSpan);
-
-        // clockPTimeZone.textContent = addEventListener("change", () => {
-        //   let dateTime = new Date(clock.time);
-        //   let formerTz = clock.timeZone;
-        //   let formerTzOffset = timeZonesUTCDiff[formerTz];
-        //   let newTz = clockPTimeZone.textContent;
-        //   let newTzOffset = timeZonesUTCDiff[newTz];
-        //   let timeZoneOffset = formerTzOffset - newTzOffset;
-        //   let timeZoneOffsetMs = timeZoneOffset * 1000 * 60 * 60;
-        //   let newTime = clock.time + timeZoneOffsetMs;
-        //   clock.time = newTime;
-        //   clockPTime.textContent = renderTimeStr(clock.time);
-        //   // console.log('former: ' + clock.timeZone);
-        //   // console.log('now: ' + clockPTimeZone.textContent);
-        //   clock.timeZone = clockPTimeZone.textContent;
-        //
-        //
-        // });
-
 
         return clock;
       }
