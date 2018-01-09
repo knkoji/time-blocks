@@ -14,11 +14,12 @@
  *= require_self
  */
 body {
-  background-color: white;
+  background-color: slategrey;
 }
 #title {
    font-size: 80px; /* px means 'pixels': the base font size is now 10 pixels high  */
    font-family: 'Monoton', sans-serif;
+   color: white;
 }
 
 h2 {
@@ -34,7 +35,7 @@ li {
   height: 300px;
   width: 600px;
   align-items: right;
-  background-color: aliceblue;
+  background-color: lightgrey;
   /*color: white;*/
   box-shadow: 3px 3px 3px 3px grey;
   ;
@@ -54,6 +55,7 @@ p {
   font-size: 60px;
   font-family: 'Orbitron';
   padding: 40px;
+  font-weight: bold;
 }
 
 .clock p:nth-child(2) {
@@ -69,6 +71,11 @@ p {
 .clock p:nth-child(4) {
   font-size: 15px;
   font-family: 'Play';
+}
+
+#clock-creator {
+  width: 100px;
+  height: 30px;
 }
 /*p {
   color: red;
